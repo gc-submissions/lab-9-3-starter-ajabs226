@@ -21,7 +21,6 @@ public class TrackerServiceA implements TrackerService {
 
 	@Override
 	public void add(String token) {
-		// trim 'er up!
 		tokenMap.merge(token, 1, Integer::sum);
 		if (al.size() > 10) {
 			al.remove(al.get(0));
@@ -35,7 +34,6 @@ public class TrackerServiceA implements TrackerService {
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 		tokenMap.clear();
 		al.clear();
 	}

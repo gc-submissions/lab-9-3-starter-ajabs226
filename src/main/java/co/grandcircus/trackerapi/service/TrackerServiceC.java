@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import co.grandcircus.trackerapi.model.CountPair;
 
-public class TrackerServiceB implements TrackerService{
+public class TrackerServiceC implements TrackerService{
 
 	LinkedList<CountPair> ll = new LinkedList<>();
 
-	@Override //dustin
+	@Override //Dustin
 	public void add(String token) {
 		for (CountPair countPair : ll) {
 			if (countPair.getToken().equals(token)) {
