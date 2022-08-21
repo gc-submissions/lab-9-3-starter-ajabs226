@@ -2,17 +2,19 @@ package co.grandcircus.trackerapi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import co.grandcircus.trackerapi.model.CountPair;
 import co.grandcircus.trackerapi.service.TrackerService;
-import co.grandcircus.trackerapi.service.TrackerServiceA;
-import co.grandcircus.trackerapi.service.TrackerServiceB;
+import co.grandcircus.trackerapi.service.TrackerServiceC;
 
 public class TrackerServiceTests {
 	
-	private TrackerService service = new TrackerServiceB();
+	private TrackerService service = new TrackerServiceC();
 	
 	@BeforeEach
 	void setup() {
@@ -106,4 +108,40 @@ public class TrackerServiceTests {
 		assertEquals(new CountPair("", 0), service.getTop());
 	}
 
+	@Test
+	void testTop5WithDuplicates() {
+		List<CountPair> expected = new ArrayList<>();
+		expected.add(new CountPair("Zeta", 7));
+		expected.add(new CountPair("Alpha", 5));
+		expected.add(new CountPair("Gamma", 4));
+		expected.add(new CountPair("Beta", 3));
+		expected.add(new CountPair("Theta", 2));
+		
+		service.add("Alpha");
+		service.add("Alpha");
+		service.add("Alpha");
+		service.add("Alpha");
+		service.add("Alpha");
+		service.add("Beta");
+		service.add("Beta");
+		service.add("Beta");
+		service.add("Gamma");
+		service.add("Gamma");
+		service.add("Gamma");
+		service.add("Gamma");
+		service.add("Delta");
+		service.add("Epsilon");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Zeta");
+		service.add("Eta");
+		service.add("Theta");
+		service.add("Theta");
+	
+		assertEquals(expected, service.getTop5());
+	}
 }
