@@ -5,14 +5,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import co.grandcircus.trackerapi.model.CountPair;
 
+@Service
 public class TrackerServiceC implements TrackerService {
 
 	LinkedList<CountPair> ll = new LinkedList<>();
 
 	@Override
 	public void add(String token) {
+		
+		if (ll.size() == 0) {
+			ll.add(new CountPair(token, 1));
+			return;
+		}
 
 		for (CountPair countPair : ll) {
 
@@ -71,37 +80,54 @@ public class TrackerServiceC implements TrackerService {
 		return sum;
 	}
 
-	@Override // Amy
+	@Override
 	public String getLatest() {
-		// TODO Auto-generated method stub
-		return null;
+		if (ll.size() == 0) {
+			return "";
+		}
+		CountPair cp = ll.get(ll.size() - 1);
+		return cp.getToken();
 	}
 
-	@Override // Amy
+	@Override
 	public CountPair getTop() {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (ll.size() == 0) {
+			return new CountPair("", 0);
+		}
+
+		List<CountPair> sortedList = new ArrayList<>(ll);
+
+		sortedList.sort(Comparator.comparing(CountPair::getCount));
+
+		return sortedList.get(sortedList.size() - 1);
 	}
 
 	@Override // Amy
 	public List<String> getLatest5() {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<String> latest5 = new ArrayList<String>();
+
+		for (int i = ll.size() - 1; i > ll.size() - 6; i--) {
+			latest5.add(ll.get(i).getToken());
+		}
+
+		return latest5;
 	}
 
 	@Override
 	public List<CountPair> getTop5() {
-		
+
 		List<CountPair> returnList = new ArrayList<>();
-		
+
 		List<CountPair> sortedList = new ArrayList<>(ll);
-		
+
 		sortedList.sort(Comparator.comparing(CountPair::getCount));
-		
+
 		for (int i = sortedList.size() - 1; i > sortedList.size() - 6; i--) {
 			returnList.add(sortedList.get(i));
 		}
-					
+
 		return returnList;
 	}
 
