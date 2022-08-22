@@ -1,6 +1,7 @@
 package co.grandcircus.trackerapi.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -16,25 +17,24 @@ public class TrackerServiceC implements TrackerService {
 	LinkedList<CountPair> ll = new LinkedList<>();
 
 	@Override
-	public void add(String token) {
-		
+	public synchronized void add(String token) {
 		if (ll.size() == 0) {
 			ll.add(new CountPair(token, 1));
 			return;
 		}
 
 		for (CountPair countPair : ll) {
-
+			
 			if (countPair.getToken().equals(token)) {
-
+				
 				countPair.setCount(countPair.getCount() + 1);
 
 				CountPair temp = countPair;
 
 				ll.remove(countPair);
 
-				ll.add(temp);
-
+				ll.addLast(temp);
+				
 				return;
 
 			} else {
@@ -118,13 +118,26 @@ public class TrackerServiceC implements TrackerService {
 	@Override
 	public List<CountPair> getTop5() {
 
+		if (ll.size() == 0) {
+			return null;
+		}
+		
+		int listSizeOffset = 0;
+		
+		if (ll.size() < 5) {
+			listSizeOffset = ll.size();
+			
+		} else {
+			listSizeOffset = 5;
+		}
+		
 		List<CountPair> returnList = new ArrayList<>();
 
 		List<CountPair> sortedList = new ArrayList<>(ll);
 
 		sortedList.sort(Comparator.comparing(CountPair::getCount));
 
-		for (int i = sortedList.size() - 1; i > sortedList.size() - 6; i--) {
+		for (int i = sortedList.size() - 1; i >= sortedList.size() - listSizeOffset; i--) {
 			returnList.add(sortedList.get(i));
 		}
 
